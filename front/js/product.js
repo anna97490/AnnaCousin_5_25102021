@@ -1,18 +1,3 @@
-/*async function apiCallProduct(){
-    var productFetch = await fetch(`http://localhost:3000/api/products/${idProduct}`)
-    return await productFetch.json();
-}
-
-async function getProduct(){
-    var result = await apiCallProduct().then(function (data){
-        const articles = data;
-        console.log(articles);
-        articles.forEach(article => {
-            console.log(articles);
-        });
-    });
-}*/
-
 var currentUrl = window.location.href;
 var url = new URL(currentUrl);
 var idProduct = url.searchParams.get('id');
@@ -97,27 +82,6 @@ function addToCart(article) {
     });
 }
             
-
-        /*//S'il y a deja des articles dans le local storage
-        if (localStorage.getItem("products") !== null) {
-            articleLocalStorage = JSON.parse(localStorage.getItem('products'));
-            console.log(articleLocalStorage);
-        }
-        else {
-            articleLocalStorage.push(productOptions);
-            localStorage.setItem('products', JSON.stringify(articleLocalStorage));
-        }*/
-
-        /*//Le Local Storage
-        let articleLocalStorage = [];
-        
-        if (localStorage.getItem("products") !== null) {
-            articleLocalStorage = JSON.parse(localStorage.getItem("products"));
-        }
-        articleLocalStorage.push(productOptions);
-        localStorage.setItem("products", JSON.stringify(articleLocalStorage));
-    });
-}*/
 
 
 

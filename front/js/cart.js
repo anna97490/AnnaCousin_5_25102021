@@ -1,16 +1,32 @@
 let localS = JSON.parse(localStorage.getItem('products'));
-console.log(localS);
+console.log(1, localS);
 const cartItemId = document.querySelector('#cart__items');
+
+getInCart();
+totalItems();
+newQtyAndPrice();
+deleteItem();
 
 //Si le panier est vide 
 function getInCart() {
-    
     if (localS === null || localS == 0) {
         cartItemId.innerHTML = `Votre panier est vide`;
     } else {
+        localS = [...localS.reduce((acc, curr) => {
+            // Création d'une clé unique pour différencier les élements de meme id/color
+            const key = curr.articleId + '-' + curr.articleColor;
+            // Si n'existe pas alors je créer un nouvel objet avec quantity à 0 via l'element
+            const item = acc.get(key) || Object.assign({}, curr, {
+              articleQuantity: 0,
+            });
+            // J'ajoute les quantités entre elles
+            item.articleQuantity += curr.articleQuantity;
+            // Je retourne l'item avec la quantité actualisée
+            return acc.set(key, item);
+            }, new Map).values()];
+            console.log(2, localS)
 
-
-        for (let products in localS){
+             for (let products in localS){
             //Creer l'article
             let elementArticle = document.createElement('article');
             document.querySelector('#cart__items').appendChild(elementArticle);
@@ -88,25 +104,135 @@ function getInCart() {
             elementDelete.appendChild(elementDeleteItm);
             elementDeleteItm.className = 'deleteItem';
             elementDeleteItm.innerHTML = 'Supprimer';
+            
+
+            /*const totalLine = [localS[products].articleName, localS[products].articleColor, localS[products].articleQuantity];
+            console.log(13, totalLine);
+            const reducer = (accumulator, current) => accumulator + current;
+            console.log(20, totalLine.reduce(reducer));*/
+            
         }
     }
 }
-getInCart();
 
+
+
+//Récupérer la quantité des articles sélectionnés via la page produits et de leur prix. 
 function totalItems() {
     //Ajouter la quantité totale
-    var elementTotalQty = document.getElementById('totalQuantity');
-    const totalQty = localS.reduce((accumulator, item) => accumulator + item.articleQuantity, 0);
+    let elementTotalQty = document.getElementById('totalQuantity');
+    const totalQty = localS.reduce((accumulator, current) => accumulator + current.articleQuantity, 0);
     elementTotalQty.innerHTML = totalQty;
-    console.log(totalQty);
+    console.log(3,totalQty);
 
     //Ajouter le prix total
-    const totalPrice = localS.reduce((accumulator, item) => accumulator + item.articlePrice *  item.articleQuantity, 0);
-    let itemTotalPrice = document.getElementById('totalPrice');
-    itemTotalPrice.innerHTML = totalPrice;
-    console.log(totalPrice); 
+    let elementTotalPrice = document.getElementById('totalPrice');
+    const totalPrice = localS.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
+    elementTotalPrice.innerHTML = totalPrice;
+    console.log(4,totalPrice); 
 }
-totalItems();
+
+//Changer la quantité d'articles via le panier
+// Modification d'une quantité de produit
+function newQtyAndPrice() {
+    let changeQty = document.querySelectorAll('.itemQuantity');
+    for (let q = 0; q < changeQty.length; q++) {
+        changeQty[q].addEventListener('change' , (event) => {
+            
+ 
+        });console.log(5, changeQty);  
+        console.log(6, q);
+        
+    }
+}
+
+
+    //const newQty = localS.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
+    //modifyQty.innerHTML = newQty;*/
+
+
+//La suppression d'un article
+function deleteItem(){
+    const deleteBtn = document.querySelector('.deleteItem');
+    let name = localS[products].articleName;
+    
+        deleteBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            //Id, couleur et quantité du produit à supprimer
+            const itemToDelete = [name, localS.articleColor, localS.articleQuantity];
+            const reducer = (accumulator, current) => accumulator + current;
+            for(let d = 0; d < itemToDelete; d++){
+                var re = reducer;
+
+            }
+            console.log(7, itemToDelete);
+            
+
+            //Ajout d'une boîte de dialogue "alert"
+            alert('Votre article a bien été supprimé')
+           
+        });
+   
+}
+
+//Le formulaire
+function orderForm() {
+    let form = document.querySelector('.cart__order__form');
+    let regExp = new RegExp('^[a-zA-Z-]+$');
+    let regExpAddress = new RegExp('^([0-9]){1-4}?([a-zA-Zàâäéèêëïîôöùûüç-])+([0-9]{1-5})$');
+    let regExpEmail = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+
+    //Ecouter la modification du Prénom
+    form.firstName.addEventListener('change', function(){
+        validFirstName(this);
+    });
+    //Création de la reg exp pour la validation du prénom
+    const validFirstName = function(inputFistName) {
+        let regExpFirstName = new RegExp('^[a-zA-Z-]+$'
+        );
+    };
+
+    //Ecouter la modification du Nom
+    form.lastName.addEventListener('change', function(){
+        validLastName(this);
+    });
+    //Création de la reg exp pour la validation du nom
+    const validLastName = function(inputLastName) {
+        let regExpFirstName = new RegExp('^[a-zA-Z-]+$'
+        );
+    };
+
+    //Ecouter la modification de l'Adresse
+    form.address.addEventListener('change', function(){
+        validAddress(this);
+    });
+    //Création de la reg exp pour la validation de l'adresse
+    const validAddress = function(inputAddress) {
+        let regExpAddress = new RegExp('^([0-9]){1-4}?([a-zA-Zàâäéèêëïîôöùûüç-])+([0-9]{1-5})$'
+        );
+    };
+
+    //Ecouter la modification de la ville
+    form.city.addEventListener('change', function(){
+        validCity(this);
+    });
+    //Création de la reg exp pour la validation de la ville
+    const validCity = function(inputCity) {
+        let regExpCity = new RegExp('^[a-zA-Z-]+$'
+        );
+    };
+    
+    //Ecouter la modification de l'email
+    form.city.addEventListener('change', function(){
+        validEmail(this);
+    });
+    //Création de la reg exp pour la validation de l'email
+    const validCity = function(inputCity) {
+        let regExpEmail = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$'
+        );
+    };
+}
+
 
 
 
