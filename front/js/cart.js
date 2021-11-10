@@ -136,16 +136,19 @@ function totalItems() {
 function newQtyAndPrice() {
     const listInputItemQty = document.querySelectorAll('.itemQuantity');
     listInputItemQty.forEach(input => {
-        input.addEventListener('click', (event) =>{
+        input.addEventListener('click', (event) => {
             const dataItem = event.target.closest("article").dataset.id.split('-');
             const newQty = event.target.value;
+
             // Actualiser localS
-            localS.forEach(kanape => {
-                if(kanape.articleId === dataItem[0] && kanape.articleColor === dataItem[1]) {
-                    kanape.articleQuantity = newQty;
-                }
+            localS.forEach(item => {
+                if(item.articleId === dataItem[0] && item.articleColor === dataItem[1]) {
+                    item.articleQuantity = newQty;
+                    console.log(33, newQty)
+                }    
             });
             console.log(1, localS)
+            
             // Actualiser le total
             totalItems();
         });
@@ -186,7 +189,7 @@ function deleteItem(){
 
 // Validation du formulaire
 function orderForm() {
-    let form = document.querySelector('.cart__order__form');
+    const form = document.querySelector('.cart__order__form');
 
     // Ecouter la modification du Prénom
     form.firstName.addEventListener('change', function(){
@@ -204,7 +207,7 @@ function orderForm() {
         if(regExpFirstName.test(inputFirstName.value)) {
             firstName.innerHTML = '';
         } else {
-            firstName.innerHTML = 'Veuillez renseigner votre Prénom';
+            firstName.innerHTML = 'Votre Prénom ne doit contenir que des lettres';
         }
     };
 
@@ -215,7 +218,7 @@ function orderForm() {
 
     // Création de la reg exp pour la validation du nom
     const validLastName = function(inputLastName) {
-        let regExpLastName = new RegExp('^[a-zA-Z-]+$');
+        let regExpLastName = new RegExp('^[a-zA-Z-]+$');//'^([a-zA-Z])+?(['-']{1})$'
         
         // Récupération de la balise <p> '#lastNameErrorMsg'
         let lastName = inputLastName.nextElementSibling;
@@ -224,7 +227,7 @@ function orderForm() {
         if(regExpLastName.test(inputLastName.value)) {
             lastName.innerHTML = '';
         } else {
-            lastName.innerHTML = 'Veuillez renseigner votre Nom';
+            lastName.innerHTML = 'Votre Nom ne doit contenir que des lettres';
         }
     };
 
@@ -235,7 +238,7 @@ function orderForm() {
 
     // Création de la reg exp pour la validation de l'adresse
     const validAddress = function(inputAddress) {
-        let regExpAddress = new RegExp('^([0-9]){1-4}?([a-zA-Zàâäéèêëïîôöùûüç-])+([0-9]{1-5})$');
+        let regExpAddress = new RegExp('^([a-zA-Z0-9-\s])+$');
     
         // Récupération de la balise <p> '#addressErrorMsg'
         let address = inputAddress.nextElementSibling;
@@ -244,7 +247,7 @@ function orderForm() {
         if(regExpAddress.test(inputAddress.value)) {
             address.innerHTML = '';
         } else {
-            address.innerHTML = 'Veuillez renseigner votre adresse';
+            address.innerHTML = 'Votre adresse n\'est pas valide';
         }
     };
 
@@ -264,7 +267,7 @@ function orderForm() {
         if(regExpCity.test(inputCity.value)) {
             city.innerHTML = '';
         } else {
-            city.innerHTML = 'Veuillez renseigner votre ville';
+            city.innerHTML = 'Votre ville ne doit contenir que des lettres';
         }
     };
     
@@ -286,7 +289,7 @@ function orderForm() {
         if(regExpEmail.test(inputEmail.value)) {
             email.innerHTML = ''; 
         } else {
-            email.innerHTML = 'Veuillez renseigner votre e-mail';
+            email.innerHTML = 'Veuillez renseigner un e-mail valide';
         }
     };
 }
@@ -326,14 +329,26 @@ function postDataForm(){
         localStorage.setItem('order', JSON.stringify(order));
 
         // Envoi de la requete POST
-        const sendObject = fetch('http://localhost:3000/api/products', {
+        const postRequest = {
             method: 'POST',
             body: JSON.stringify(order),
             headers: { 
                 'Content-Type': 'application/json',
             },
-        });   
-        
+        };  
+
+        fetch('http://localhost:3000/api/products', postRequest)
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(40, data);
+            localStorage.setItem('orderId', data.orderId);
+            
+            document.location.href = 'confirmation.html';
+            alert('Votre formulaire a bien été envoyé');
+        })
+        .catch((err) => {
+            alert('Problème serveur : ' + err.message);
+        })   
     });
 }
 
