@@ -1,6 +1,6 @@
-var currentUrl = window.location.href;
-var url = new URL(currentUrl);
-var idProduct = url.searchParams.get('id');
+let currentUrl = window.location.href;
+let url = new URL(currentUrl).searchParams.get('id');
+let idProduct = url;
 
 const colorSelection = document.querySelector('#colors');
 const quantitySelection = document.querySelector('#quantity');
@@ -10,9 +10,8 @@ getProduct();
 // Requete API
 function getProduct() {
     fetch(`http://localhost:3000/api/products/${idProduct}`)
-    .then(res => {
-        return res.json();
-    }).then(article => {
+    .then(res => res.json()) 
+    .then(article => {
         console.log(1, article);
 
         // Injecter l'image
@@ -46,7 +45,7 @@ function getProduct() {
 function addToCart(article) {
     const btnAddToCart = document.querySelector('#addToCart');
 
-    btnAddToCart.addEventListener('click', (event) => {
+    btnAddToCart.addEventListener('click', () => {
         // Si la quantité d'articles est comprise entre 0 et 100
         if (quantitySelection.value > 0 && quantitySelection.value < 100){
             let colorChoice = colorSelection.value;

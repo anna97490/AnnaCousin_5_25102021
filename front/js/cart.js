@@ -120,7 +120,7 @@ function getInCart() {
 function totalItems() {
     //Ajouter la quantité totale
     let elementTotalQty = document.getElementById('totalQuantity');
-    const totalQty = localS.reduce((accumulator, current) => accumulator + current.articleQuantity, 0);
+    const totalQty = localS.reduce((accumulator, current) => accumulator + parseInt(current.articleQuantity, 10), 0);
     elementTotalQty.innerHTML = totalQty;
     console.log(3,totalQty);
 
@@ -176,7 +176,7 @@ function deleteItem(){
                 }
                 // Actualisation de la liste d'article 
                 getInCart();
-                // Actualisation de la liste d'article
+                // Actualisation du total
                 totalItems(); 
                 // Actualisation du localStorage
                 localStorage.setItem('products', JSON.stringify(localS));
@@ -238,7 +238,7 @@ function orderForm() {
 
     // Création de la reg exp pour la validation de l'adresse
     const validAddress = function(inputAddress) {
-        let regExpAddress = new RegExp('^([a-zA-Z0-9-\s])+$');
+        let regExpAddress = new RegExp('^[A-Za-z0-9-\s]+$');
     
         // Récupération de la balise <p> '#addressErrorMsg'
         let address = inputAddress.nextElementSibling;
@@ -297,7 +297,6 @@ function orderForm() {
 // Envoi des informations du formulaire
 function postDataForm(){
     const orderBtn = document.getElementById('order');
-    console.log(9,orderBtn);
 
     orderBtn.addEventListener('click', () => {
         orderForm();
@@ -338,17 +337,17 @@ function postDataForm(){
         };  
 
         fetch('http://localhost:3000/api/products', postRequest)
-        .then((res) => res.json())
-        .then((data) => {
-            console.log(40, data);
+        .then((res) => {
+            return res.json();
+        }).then((data) => {
             localStorage.setItem('orderId', data.orderId);
-            
+            console.log(data);
             document.location.href = 'confirmation.html';
             alert('Votre formulaire a bien été envoyé');
         })
         .catch((err) => {
-            alert('Problème serveur : ' + err.message);
-        })   
+            alert ("Problème avec fetch");  
+        })
     });
 }
 
