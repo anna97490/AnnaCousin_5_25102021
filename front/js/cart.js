@@ -10,85 +10,92 @@ postDataForm();
 
 // Création des items du panier
 function getInCart() {
-    if (localS === null || localS == 0) {
-        cartItemId.innerHTML = `Votre panier est vide`;
+    // Si le panier est vide
+    if (localS === null /*|| localS === 0*/) {
+        cartItemId.innerHTML = 'Votre panier est vide';
     } else {
         localS = [...localS.reduce((acc, curr) => {
-            // Création d'une clé unique pour différencier les élements de meme id/color
+            console.log(2,...localS);
+
+            // Création d'une constante contentant l'id et la couleur de l'article
             const key = curr.articleId + '-' + curr.articleColor;
-            // Si n'existe pas alors je créer un nouvel objet avec quantity à 0 via l'element
+            console.log(3, curr.articleId);
+
+            // Création d'un nouvel objet avec quantity à 0 
             const item = acc.get(key) || Object.assign({}, curr, {
               articleQuantity: 0,
-            });
-            // J'ajoute les quantités entre elles
+            });console.log(4,item)
+
+            // Ajout des nouvelles qtés
             item.articleQuantity += curr.articleQuantity;
-            // Je retourne l'item avec la quantité actualisée
+
+            // Actualisation de la qté en la retournant
             return acc.set(key, item);
             }, new Map).values()];
-
-        for (let products in localS){
-            //Creer l'article
+           
+        localS.forEach(products => {
+            // Injecter l'article
             let elementArticle = document.createElement('article');
             document.querySelector('#cart__items').appendChild(elementArticle);
             elementArticle.classList.add = 'cart__item';
-            elementArticle.setAttribute('data-id', `${localS[products].articleId}-${localS[products].articleColor}`);
+            elementArticle.setAttribute('data-id', `${products.articleId}-${products.articleColor}`);
 
-            //Creer la div cart__item__img
+            // Injecter la div cart__item__img
             let elementDivImg = document.createElement('div');
             elementArticle.appendChild(elementDivImg);
             elementDivImg.classList.add('cart__item__img');
 
-            //Creer l'image dans la div 'cart__item__img'
+            // Injecter l'image dans la div 'cart__item__img'
             let elementImg = document.createElement('img');
             elementDivImg.appendChild(elementImg);
-            elementImg.src = localS[products].articleImg;
-            elementImg.alt = localS[products].articleAltTxt;
+            elementImg.src = products.articleImg;
+            elementImg.alt = products.articleAltTxt;
 
-            //Creer la div 'cart__item__content'
+            // Injecter la div 'cart__item__content'
             let elementDivContent = document.createElement('div');
             elementArticle.appendChild(elementDivContent);
             elementDivContent.classList.add('cart__item__content');
 
-            //Creer la div 'cart__item__content__titlePrice'
+            // Injecter 'cart__item__content__titlePrice'
             let elementDivContentTitlePrice = document.createElement('div');
             elementDivContent.appendChild(elementDivContentTitlePrice);
             elementDivContentTitlePrice.classList.add('cart__item__content__titlePrice');
 
-            //Creer le h2
+            // Injecter le h2
             let elementTitle = document.createElement('h2');
             elementDivContentTitlePrice.appendChild(elementTitle);
-            elementTitle.innerHTML = localS[products].articleName;
+            elementTitle.innerHTML = products.articleName;
 
-            //Creer l'element <p> contenant le prix
+            // Injecter l'element <p> contenant le prix
             let elementPrice = document.createElement('p');
             elementDivContentTitlePrice.appendChild(elementPrice);
-            elementPrice.innerHTML = localS[products].articlePrice + " €";
+            elementPrice.innerHTML = products.articlePrice + " €";
 
-            //Creer la div 'cart__item__content__settings'
+            // Injecter la div 'cart__item__content__settings'
             let elementDivSettings = document.createElement('div');
             elementDivContent.appendChild(elementDivSettings);
             elementDivSettings.classList.add('cart__item__content__settings');
 
-            //Creer la div 'cart__item__content__settings__quantity'
+            // Injecter la div 'cart__item__content__settings__quantity'
             let elementDivSettingsQty = document.createElement('div');
             elementDivSettings.appendChild(elementDivSettingsQty);
             elementDivSettingsQty.classList.add('cart__item__content__settings__quantity');
 
-            //Créer l'élement <p> contenant la couleur
+            // Injecter l'élement <p> contenant la couleur
             let elementColor = document.createElement('p');
             elementDivSettingsQty.appendChild(elementColor);
-            elementColor.innerHTML = `Couleur : ${localS[products].articleColor}`;
+            elementColor.innerHTML = `Couleur : ${products.articleColor}`;
 
-            //Creer l'element <p> contenant le texte de quantité
+            // Injecter l'element <p> contenant le texte de quantité
             let elementQty = document.createElement('p');
             elementDivSettingsQty.appendChild(elementQty);
             elementQty.innerHTML = 'Quantité : ';
 
-            //Insérer la quantité avec l'élément input
+            // Insérer la quantité avec l'élément input
             let elementQtyInput = document.createElement('input');
             elementDivSettingsQty.appendChild(elementQtyInput);
             elementQtyInput.classList.add('itemQuantity');
-            elementQtyInput.value = localS[products].articleQuantity;
+            elementQtyInput.value = products.articleQuantity;
             elementQtyInput.setAttribute('type', 'number');
             elementQtyInput.setAttribute('name', 'itemQuantity');
             elementQtyInput.setAttribute('min', "1");
@@ -111,7 +118,7 @@ function getInCart() {
             const reducer = (accumulator, current) => accumulator + current;
             console.log(20, totalLine.reduce(reducer));*/
             
-        }
+        })
     }
     deleteItem();
 }
@@ -122,16 +129,16 @@ function totalItems() {
     let elementTotalQty = document.getElementById('totalQuantity');
     const totalQty = localS.reduce((accumulator, current) => accumulator + parseInt(current.articleQuantity, 10), 0);
     elementTotalQty.innerHTML = totalQty;
-    console.log(3,totalQty);
+    console.log(5,totalQty);
 
     //Ajouter le prix total
     let elementTotalPrice = document.getElementById('totalPrice');
     const totalPrice = localS.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
     elementTotalPrice.innerHTML = totalPrice;
-    console.log(4,totalPrice); 
+    console.log(6,totalPrice); 
 }
 
-//Changer la quantité d'articles via le panier
+// Changer la quantité d'articles via le panier
 // Modification d'une quantité de produit
 function newQtyAndPrice() {
     const listInputItemQty = document.querySelectorAll('.itemQuantity');
@@ -144,10 +151,10 @@ function newQtyAndPrice() {
             localS.forEach(item => {
                 if(item.articleId === dataItem[0] && item.articleColor === dataItem[1]) {
                     item.articleQuantity = newQty;
-                    console.log(33, newQty)
+                    console.log(7, newQty)
                 }    
             });
-            console.log(1, localS)
+            console.log(8, localS)
             
             // Actualiser le total
             totalItems();
@@ -158,12 +165,13 @@ function newQtyAndPrice() {
 
 //La suppression d'un article
 function deleteItem(){
-    // Récupere les balises p "Supprimer"
+    // Récuperation des balises p "Supprimer"
     const deleteButtons = document.querySelectorAll('.deleteItem');
-    // Pour chaque bouton supprimer que je trouve, j'ajoute un eventListener
+
+    // Pour chaque bouton supprimé, ajout d'un eventListener
     deleteButtons.forEach((btn) => {
         btn.addEventListener('click', (event) => {
-            // récupération du parent
+            // Récupération
             const dataItem = event.target.closest("article").dataset.id.split('-');
             if(dataItem.length) {
                 // Suppression de l'article correspondant
@@ -238,7 +246,7 @@ function orderForm() {
 
     // Création de la reg exp pour la validation de l'adresse
     const validAddress = function(inputAddress) {
-        let regExpAddress = new RegExp('^[A-Za-z0-9-\s]+$');
+        let regExpAddress = new RegExp('/^[A-Za-z0-9-\s]$/');
     
         // Récupération de la balise <p> '#addressErrorMsg'
         let address = inputAddress.nextElementSibling;
@@ -296,7 +304,7 @@ function orderForm() {
 
 // Envoi des informations du formulaire
 function postDataForm(){
-    const orderBtn = document.getElementById('order');
+    const orderBtn = document.querySelector('#order');
 
     orderBtn.addEventListener('click', () => {
         orderForm();
@@ -310,7 +318,8 @@ function postDataForm(){
 
         // Créer un tableau qui contient les produits sélectionnés 
         let productsOredered = [];
-        productsOredered.push(localS);
+        productsOredered.push(localS.articleId);
+        console.log(111, productsOredered)
 
         // Créer un objet qui contient les infos du client et les produits sélectionnés 
         const order = {
@@ -322,7 +331,7 @@ function postDataForm(){
                 email : inputEmail,
             },
             products : productsOredered,
-        };console.log(order);
+        };console.log(9, order);
 
         // Injecter l'objet "order" au local storage
         localStorage.setItem('order', JSON.stringify(order));
@@ -337,16 +346,15 @@ function postDataForm(){
         };  
 
         fetch('http://localhost:3000/api/products', postRequest)
-        .then((res) => {
-            return res.json();
-        }).then((data) => {
-            localStorage.setItem('orderId', data.orderId);
-            console.log(data);
+        .then((response) => response.json()) 
+        .then((datas) => {
+            localStorage.setItem('orderId', datas.orderId);
+            console.log(10, datas);
             document.location.href = 'confirmation.html';
             alert('Votre formulaire a bien été envoyé');
         })
         .catch((err) => {
-            alert ("Problème avec fetch");  
+            alert ("Problème réseau");  
         })
     });
 }

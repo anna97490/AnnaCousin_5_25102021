@@ -30,12 +30,12 @@ function getProduct() {
         document.querySelector('#description').innerHTML = article.description;
 
         // Injecter les couleurs
-        article.colors.forEach(colors => {
-            console.log(2, colors);
+        article.colors.forEach(color => {
+            console.log(2, color);
             let productColors = document.createElement('option');
             document.querySelector('#colors').appendChild(productColors);
-            productColors.value = colors;
-            productColors.innerHTML = colors;
+            productColors.value = color;
+            productColors.innerHTML = color;
         });
         addToCart(article);
     });
@@ -65,19 +65,22 @@ function addToCart(article) {
 
             // Initialisation du local storage
             let articleLocalStorage = [];
+            let itemStorage = localStorage.getItem('products');
+            console.log(4, itemStorage)
 
             // S'il y a déja des articles dans le local storage
-            if (localStorage.getItem('products') !== null) {
-                articleLocalStorage = JSON.parse(localStorage.getItem('products'));
+            if (itemStorage !== null) {
+                articleLocalStorage = JSON.parse(itemStorage);
                 articleLocalStorage.push(productOptions);
                 localStorage.setItem('products', JSON.stringify(articleLocalStorage));
-                console.log(4, JSON.parse(localStorage.getItem('products')));
+                console.log(5, JSON.parse(localStorage.getItem('products')));
             }
             else { // Si le local storage est vide
                     articleLocalStorage.push(productOptions);
                     localStorage.setItem('products', JSON.stringify(articleLocalStorage));
-                    console.log(5, articleLocalStorage);
+                    console.log(6, articleLocalStorage);
             };
+            alert('Votre article a bien été ajouté au panier');
         };
     });
 }
