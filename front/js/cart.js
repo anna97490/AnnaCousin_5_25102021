@@ -1,52 +1,67 @@
-// Récupération de la clé 'products'
-let itemStorageCart = localStorage.getItem('products');
-let productsInCart = JSON.parse(itemStorageCart); // Convertir JSON (itemStorageCart) en JS, inverse de stringify
+// Tranformer JSON en JS
+let productsInCart = JSON.parse(localStorage.getItem('products'));
 console.log(1, productsInCart);
-
 
 
 getInCart();
 totalItems();
-newQtyAndPrice();
+qtyInput();
 orderForm();
 postDataForm();
 
 // Création des items du panier
 function getInCart() {
     const cartItemId = document.querySelector('#cart__items');
-    //let key = productsInCart.articleId + '-' + productsInCart.articleColor;
-    
     // Si le panier est vide
-    if (productsInCart === null /*|| localS === 0*/) {//---------?
+    if (productsInCart === null) {
         cartItemId.innerHTML = 'Votre panier est vide';
     } else {
-      
-        //localS = [...localS.reduce((acc, curr) => {
-            //console.log(2,...localS);
+       
+        /*productsInCart = [...productsInCart.reduce((acc, curr) => {
+            console.log(2,...productsInCart);
 
             // Création d'une constante contentant l'id et la couleur de l'article
-            //*const key = curr.articleId + '-' + curr.articleColor;
-            //console.log(3, curr.articleId);
+            const key = curr.articleId + '-' + curr.articleColor;
+            console.log(3, curr.articleId);
 
             // Création d'un nouvel objet avec quantity à 0 
-            //const item = acc.get(key) || Object.assign({}, curr, {
-              //articleQuantity: 0,
-            //});console.log(4,item)
+            const item = acc.get(key) || Object.assign({}, curr, {
+            articleQuantity: 0,
+            });console.log(4,item)
 
             // Ajout des nouvelles qtés
-            //item.articleQuantity += curr.articleQuantity;
+            item.articleQuantity += curr.articleQuantity;
 
             // Actualisation de la qté en la retournant
-            //return acc.set(key, item);
-            //}, new Map).values()];
-           
-        productsInCart.forEach(products => {
+            return acc.set(key, item);
+            }, new Map).values()];*/
+            let productArrayCopy = [];
+            console.log(productArrayCopy)
+            // Vérifier si larticle id et la couleur sont les memes ou pas 
+            productsInCart.forEach(product => {
+                // Si l'article ajouté n'a pas le meme id et color alors il est ajouté au panier
+                if(compareCurrProduct(productArrayCopy, product)) {
+                    productArrayCopy.push(product);
+                    console.log(666,compareCurrProduct(productArrayCopy, product))
+                // Mais si c'est le cas c'est juste la qté qui change
+                } else {
+                    productArrayCopy.forEach(currProduct => {
+                        if(product.articleId === currProduct.articleId && product.articleColor === currProduct.articleColor) {
+                            currProduct.articleQuantity = currProduct.articleQuantity + product.articleQuantity;
+                        }
+                    });
+                }
+            });
+            productsInCart = productArrayCopy;
             
+        // Generer les elements du panier sur le DOM
+        productsInCart.forEach(product => {
             // Injecter l'article
             let elementArticle = document.createElement('article');
             document.querySelector('#cart__items').appendChild(elementArticle);
             elementArticle.classList.add = 'cart__item';
-            elementArticle.setAttribute('data-id', `${products.articleId}-${products.articleColor}`);
+            elementArticle.setAttribute('data-id', `${product.articleId}-${product.articleColor}`);
+
 
             // Injecter la div cart__item__img
             let elementDivImg = document.createElement('div');
@@ -56,8 +71,8 @@ function getInCart() {
             // Injecter l'image dans la div 'cart__item__img'
             let elementImg = document.createElement('img');
             elementDivImg.appendChild(elementImg);
-            elementImg.src = products.articleImg;
-            elementImg.alt = products.articleAltTxt;
+            elementImg.src = product.articleImg;
+            elementImg.alt = product.articleAltTxt;
 
             // Injecter la div 'cart__item__content'
             let elementDivContent = document.createElement('div');
@@ -72,12 +87,12 @@ function getInCart() {
             // Injecter le h2
             let elementTitle = document.createElement('h2');
             elementDivContentTitlePrice.appendChild(elementTitle);
-            elementTitle.innerHTML = products.articleName;
+            elementTitle.innerHTML = product.articleName;
 
             // Injecter l'element <p> contenant le prix
             let elementPrice = document.createElement('p');
             elementDivContentTitlePrice.appendChild(elementPrice);
-            elementPrice.innerHTML = products.articlePrice + " €";
+            elementPrice.innerHTML = product.articlePrice + " €";
 
             // Injecter la div 'cart__item__content__settings'
             let elementDivSettings = document.createElement('div');
@@ -92,7 +107,7 @@ function getInCart() {
             // Injecter l'élement <p> contenant la couleur
             let elementColor = document.createElement('p');
             elementDivSettingsQty.appendChild(elementColor);
-            elementColor.innerHTML = products.articleColor;
+            elementColor.innerHTML = product.articleColor;
 
             // Injecter l'element <p> contenant le texte de quantité
             let elementQty = document.createElement('p');
@@ -103,90 +118,85 @@ function getInCart() {
             let elementQtyInput = document.createElement('input');
             elementDivSettingsQty.appendChild(elementQtyInput);
             elementQtyInput.classList.add('itemQuantity');
-            elementQtyInput.value = products.articleQuantity;
+            elementQtyInput.value = product.articleQuantity;
             elementQtyInput.setAttribute('type', 'number');
             elementQtyInput.setAttribute('name', 'itemQuantity');
             elementQtyInput.setAttribute('min', "1");
-            elementQtyInput.setAttribute('max', '100');
+            elementQtyInput.setAttribute('max', '100')
 
-            /*let idAndColor = products.articleId + '-' + products.articleColor;     
-            console.log(23,idAndColor);
-            let qty = products.articleQuantity;*/
-            
+
             //Créer la div 'cart__item__content__settings__delete' 
             let elementDelete = document.createElement('div');
             elementDivSettings.appendChild(elementDelete);
-            elementDelete.classList.add('cart__item__content__settings__delete'); // je peux transformer classlist.add par classname =
+            elementDelete.classList.add('cart__item__content__settings__delete'); 
 
             //Créer l'élément '<p>' 'deleteItem' 
-            elementDeleteItm = document.createElement('p');
+            let elementDeleteItm = document.createElement('p');
             elementDelete.appendChild(elementDeleteItm);
             elementDeleteItm.className = 'deleteItem';
             elementDeleteItm.innerHTML = 'Supprimer';
-            
-            /*const totalLine = [localS[products].articleName, localS[products].articleColor, localS[products].articleQuantity];
-            console.log(13, totalLine);
-            const reducer = (accumulator, current) => accumulator + current;
-            console.log(20, totalLine.reduce(reducer));
-            const totalLine = document.querySelector('.itemQuantity');
-            let totalIdColor = products.articleId + '-' + products.articleColor;
-            let totalLineQty = products.articleQuantity; 
-            //totalLineQty = 0;
-            console.log(32,totalIdColor);
-            console.log(34,totalLine);
-            console.log(33,totalLineQty);*/
-            
         });
     }
     deleteItem();
 }
 
-//Récupérer la quantité des articles sélectionnés via la page produits et de leur prix. 
-function totalItems() {
-    /*const totalLine = document.getElementsByClassName('itemQuantity');
-    console.log(111,totalLine);
-    let totalArray = [productsInCart.articleQuantity.value];
-    console.log(222, totalArray);
-    /*for(i =0; i < productsInCart.length; i++){
-        console.log(22, productsInCart.length);  
-    };*/
+//Fonction qui permettra de comparer un nouveau tableau à celui contenant les produits du LS
+function compareCurrProduct(productArray, currProduct){
+    let exist = true;
+    // Si le tableau n'est pas vide
+    if(productArray.length > 0) {
+        // Si au moins un élément existe 
+        exist = !productArray.some(product => currProduct.articleId === product.articleId && currProduct.articleColor === product.articleColor);   
+    }console.log(333,exist)
+    return exist;  
+}
 
-    //Ajouter la quantité totale
+
+// Récupérer le total des articles et du prix 
+function totalItems() {
+     
+    // Ajouter la quantité totale
     let elementTotalQty = document.getElementById('totalQuantity');
     const totalQty = productsInCart.reduce((accumulator, current) => accumulator + parseInt(current.articleQuantity, 10), 0);
     elementTotalQty.innerHTML = totalQty;
-    console.log(5,totalQty);
+    
 
-    //Ajouter le prix total
+    // Ajouter le prix total
     let elementTotalPrice = document.getElementById('totalPrice');
     const totalPrice = productsInCart.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
     elementTotalPrice.innerHTML = totalPrice;
-    console.log(6,totalPrice); 
+    
 }
 
 // Changer la quantité d'articles via le panier
-// Modification d'une quantité de produit
-function newQtyAndPrice() {
+function qtyInput() {
     const listInputItemQty = document.querySelectorAll('.itemQuantity');
-    listInputItemQty.forEach(input => {
-        input.addEventListener('click', (event) => {
-            const dataItem = event.target.closest("article").dataset.id.split('-');
-            const newQty = event.target.value;
 
-            // Actualiser productsInCart
+    listInputItemQty.forEach(input => { // Récupérer les données de l'input 
+        // Ecoute  du click de l'input afin de changer la qté
+        input.addEventListener('click', (event) => {
+           
+            // Récupérer l'id et la couleur séparés par un -
+            const dataItem = event.target.closest("article").dataset.id.split('-');
+            // Récupérer la valeur de l'input, donc la qté contenue à l'intérieur
+            const newQty = event.target.value; // C'est une référence à l'objet qui a envoyé l'événement
+
+           // Actualiser productsInCart
             productsInCart.forEach(item => {
+                
+                // Si la valeur de articleId = à celle de l'input et que la valeur de articleColor = à celle de l'input
                 if(item.articleId === dataItem[0] && item.articleColor === dataItem[1]) {
-                    item.articleQuantity = newQty;
-                    console.log(7, newQty)
-                }    
+                    item.articleQuantity = newQty; // Alors on change la quantité de productsInCart en la qté de l'input 
+                    
+                };   
             });
-            console.log(8, productsInCart)
-            
+             
             // Actualiser le total
             totalItems();
+            //console.log(23,productsInCart);
         });
-    });
-
+    
+    })
 }
 
 //La suppression d'un article
@@ -194,11 +204,14 @@ function deleteItem(){
     // Récuperation des balises p "Supprimer"
     const deleteButtons = document.querySelectorAll('.deleteItem');
 
-    // Pour chaque bouton supprimé, ajout d'un eventListener
-    deleteButtons.forEach((btn) => {
+    // Récupérations des données du bouton 'supprimer'
+    deleteButtons.forEach(btn => {
+        // Pour chaque bouton supprimé, ajout d'un eventListener
         btn.addEventListener('click', (event) => {
-            // Récupération
+
+            // Récupération de l'id et de la couleur via l'<article>
             const dataItem = event.target.closest("article").dataset.id.split('-');
+
             if(dataItem.length) {
                 // Suppression de l'article correspondant
                 productsInCart = productsInCart.filter(item => item.articleId !== dataItem[0] || item.articleColor !== dataItem[1]);
@@ -349,7 +362,7 @@ function postDataForm(){
         productsInCart.forEach(article => {
             productsOrdered.push(article.articleId);
         });
-        console.log(1, productsOrdered)
+        console.log(7, productsOrdered)
 
         // Créer un objet qui contient les infos du client et les produits sélectionnés 
         const order = {
@@ -362,7 +375,7 @@ function postDataForm(){
             },
             products : productsOrdered,
         };
-        console.log(2, order);
+        console.log(8, order);
 
         // Envoi de la requete POST
         const postRequest = {
@@ -374,10 +387,10 @@ function postDataForm(){
         };  
 
         fetch('http://localhost:3000/api/products/order',postRequest)
-        .then((response) => response.json()) 
+        .then((response) => response.json()) //-----FormData()
         .then((datas) => {
             localStorage.setItem('orderId', datas.orderId);
-            console.log(3, datas);
+            console.log(9, datas);
             
             //document.location.href = 'confirmation.html';
             alert('Votre formulaire a bien été envoyé');
