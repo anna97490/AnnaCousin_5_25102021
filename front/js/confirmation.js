@@ -1,8 +1,5 @@
-confirmationId();
 
-// Initialisation de la fonction permettant de renvoyer le code de confirmation
-function confirmationId() {
-    const getOrderId = document.querySelector('#orderId');
-    getOrderId.innerHTML = localStorage.getItem('orderId');
-    console.log(1,getOrderId);
-}
+// Récupération de l'ordeId et affichage
+const getOrderId = document.querySelector('#orderId');
+getOrderId.innerHTML = localStorage.getItem('orderId');
+console.log(1,getOrderId);

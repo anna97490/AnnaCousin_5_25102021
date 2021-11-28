@@ -60,7 +60,7 @@ function addToCart(articleToCart) {
         if (qtySelection.value > 0 && qtySelection.value < 100) {
             
             // Création de l'objet qui pourra etre ajouté dans le panier
-            let productOptions = {
+            const productOptions = {
                 articleId : idProduct,
                 articleColor : colorChoice,
                 articleQuantity : Number(quantityChoice),
