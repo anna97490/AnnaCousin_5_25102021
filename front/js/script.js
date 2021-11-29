@@ -12,7 +12,7 @@ function getItems() {
                 console.log(2, data);
                 // Le lien de la page "products" contenant l'id produit
                 let productLink = document.createElement('a');
-                document.querySelector('.items').appendChild(productLink);//------->.items ou #items
+                document.querySelector('.items').appendChild(productLink);
                 productLink.href += `product.html?id=${data._id}`;
 
                 // L'<article> contenant l'image, le nom et la description du produit

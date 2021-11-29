@@ -89,9 +89,9 @@ function addToCart(articleToCart) {
                 console.log(5, articleLocalStorage);
             };
             // Redirection vers le panier
-            let productHref = `http://127.0.0.1:5500/front/html/cart.html`;
+            let cartHref = `http://127.0.0.1:5500/front/html/cart.html`;
             if (confirm('Votre produit a bien été ajouté. Souhaitez-vous accéder à votre panier?')){
-                window.location = productHref;
+                window.location = cartHref;
             } else {
                 window.location 
             }

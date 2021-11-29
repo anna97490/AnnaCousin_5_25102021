@@ -135,12 +135,12 @@ function compareCurrProduct(productArray, currProduct) {
 function totalItems() {
      
     // Ajouter la quantité totale
-    let elementTotalQty = document.querySelector('#totalQuantity');
+    const elementTotalQty = document.querySelector('#totalQuantity');
     const totalQty = productsInCart.reduce((accumulator, current) => accumulator + parseInt(current.articleQuantity, 10), 0);
     elementTotalQty.innerHTML = totalQty;
     
     // Ajouter le prix total
-    let elementTotalPrice = document.querySelector('#totalPrice');
+    const elementTotalPrice = document.querySelector('#totalPrice');
     const totalPrice = productsInCart.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
     elementTotalPrice.innerHTML = totalPrice;   
 }
@@ -162,9 +162,9 @@ function qtyInput() {
            // Actualiser productsInCart
             productsInCart.forEach(item => {
                 
-                // Si l'artcileId est = à celui de l'input et que l'articleColor = à celle de l'input
+                // Si l'id et la couleur correspondent alors la qté est actualisée
                 if(item.articleId === dataItem[0] && item.articleColor === dataItem[1]) {
-                    item.articleQuantity = newQty; // Alors on change la quantité de productsInCart en la qté de l'input 
+                    item.articleQuantity = newQty; 
                 }
             });
              
@@ -177,7 +177,7 @@ function qtyInput() {
 
 //La suppression d'une ligne d'articles article
 function deleteItem(){
-    // Récuperation des balises p "Supprimer"
+    // Récuperation de toutes les références vers tous les boutons supprimer de chaque article
     const deleteButtons = document.querySelectorAll('.deleteItem');
 
     // Récupération des données de l'élément <p> 'supprimer'
@@ -186,13 +186,14 @@ function deleteItem(){
         btn.addEventListener('click', (event) => {
             
             // Récupération de l'id et de la couleur via l'<article>
-            const articleToDelete = event.target.closest("article");
+            const articleToDelete = event.target.closest("article");//---l'id à supprimer est ici
             const dataItem = articleToDelete.dataset.id.split('-');
             console.log(5, dataItem);
+            // Si cet élément existe
             if(dataItem.length > 0) {
-                // Suppression de l'article correspondant
+                // Création d'un nouveau tableau trié qui permettra de faire l'actualisation du total du prix et de la qté
+                // Je garde uniquement les articles ayant un id différent de celui qui a été cliqué
                 productsInCart = productsInCart.filter(item => item.articleId !== dataItem[0] || item.articleColor !== dataItem[1]);
-                // Je créée un nouveau tableau qui contient les articles sauf celui supprimé
                 console.log(6,productsInCart);
                 
                 // Suppression de l'ancien article dans le DOM
@@ -214,7 +215,7 @@ function orderForm() {
     
     // Ecouter la modification du Prénom
     form.firstName.addEventListener('change', () => {
-          //Valider le format du prénom
+          // Valider le format du prénom
           let regExpFirstName = new RegExp('^[a-zA-Z-]+$');
        
           // Récupération de la balise <p> '#firstNameErrorMsg'
@@ -226,7 +227,8 @@ function orderForm() {
           } else {
               firstName.innerHTML = 'Votre Prénom ne doit contenir que des lettres';
           }
-    });
+    });console.log(66, form.firstName);
+    console.log(67, firstName.nextElementSibling);
 
     // Ecouter la modification du Nom
     form.lastName.addEventListener('change', () => {
@@ -234,10 +236,10 @@ function orderForm() {
         let regExpLastName = new RegExp('^[a-zA-Z-]+$');
         
         // Récupération de la balise <p> '#lastNameErrorMsg'
-        let lastName = inputLastName.nextElementSibling;
+        let lastName = form.lastName.nextElementSibling;
 
         // Test de l'expression régulière
-        if(regExpLastName.test(inputLastName.value)) {
+        if(regExpLastName.test(form.lastName.value)) {
             lastName.innerHTML = '';
         } else {
             lastName.innerHTML = 'Votre Nom ne doit contenir que des lettres';
@@ -245,16 +247,16 @@ function orderForm() {
     });
 
     // Ecouter la modification de l'Adresse
-    form.address.addEventListener('change', () =>{
+    form.address.addEventListener('change', () => {
 
     // Création de la reg exp pour la validation de l'adresse
         let regExpAddress = new RegExp('^[A-Za-z0-9- ]*$');
     
         // Récupération de la balise <p> '#addressErrorMsg'
-        let address = inputAddress.nextElementSibling;
+        let address = form.address.nextElementSibling;
 
         // Test de l'expression régulière
-        if(regExpAddress.test(inputAddress.value)) {
+        if(regExpAddress.test(form.address.value)) {
             address.innerHTML = '';
         } else {
             address.innerHTML = 'Votre adresse n\'est pas valide';
@@ -268,10 +270,10 @@ function orderForm() {
         let regExpCity = new RegExp('^[a-zA-Z-]+$');
 
         // Récupération de la balise <p> '#cityErrorMsg'
-        let city = inputCity.nextElementSibling;
+        let city = form.city.nextElementSibling;
 
         // Test de l'expression régulière
-        if(regExpCity.test(inputCity.value)) {
+        if(regExpCity.test(form.city.value)) {
             city.innerHTML = '';
         } else {
             city.innerHTML = 'Votre ville ne doit contenir que des lettres';
@@ -287,10 +289,10 @@ function orderForm() {
             );
         
         // Récupération de la balise <p> '#emailErrorMsg'
-        let email = inputEmail.nextElementSibling;
+        let email = form.email.nextElementSibling;
         
         // Test de l'expression régulière
-        if(regExpEmail.test(inputEmail.value)) {
+        if(regExpEmail.test(form.email.value)) {
             email.innerHTML = ''; 
         } else {
             email.innerHTML = 'Veuillez renseigner un e-mail valide';
@@ -302,6 +304,7 @@ function orderForm() {
 function postDataForm(){
     const orderBtn = document.querySelector('#order');
     const formOrder = document.querySelector('.cart__order__form');
+    console.log(444,formOrder);
     
     formOrder[0].addEventListener('submit', (event) => {
         // Annulation de l'envoi du formulaire par défaut
@@ -314,13 +317,14 @@ function postDataForm(){
         const inputAddress = document.querySelector('#address').value;
         const inputCity = document.querySelector('#city').value;
         const inputEmail = document.querySelector('#email').value;
+        console.log(888,inputFirstName);
         
         // Créer un tableau qui contient les produits sélectionnés 
         let productsOrdered = [];
         productsInCart.forEach(article => {
             productsOrdered.push(article.articleId);
         });
-        console.log(6, productsOrdered)
+        console.log(6, productsOrdered);
 
         // Créer un objet qui contient les infos du client et les produits sélectionnés 
         const order = {
@@ -347,10 +351,8 @@ function postDataForm(){
         fetch('http://localhost:3000/api/products/order',postRequest)
         .then((response) => response.json()) 
         .then((datas) => {
-            
             localStorage.setItem('orderId', datas.orderId);
             console.log(8, datas);
-            
         })
         .catch((err) => {
             alert ("Problème réseau");  
@@ -358,7 +360,8 @@ function postDataForm(){
         // Redirection vers la page de confirmation
         let confirmHref = `http://127.0.0.1:5500/front/html/confirmation.html`;
         alert('Votre commande a bien été validée');
-        window.location = confirmHref;  
+        window.location = confirmHref; 
+        //localStorage.clear(); 
     });
 }
 
