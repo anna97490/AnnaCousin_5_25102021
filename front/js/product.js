@@ -7,13 +7,13 @@ getProduct();
 
 // Requete API
 function getProduct() {
-    // // Appel du produit à l'API
+    // // Appel des données du produit à l'API
     fetch(`http://localhost:3000/api/products/${idProduct}`)
     .then(res => res.json()) 
     .then(article => {
         console.log(1, article);
 
-        // Injecter l'image
+        // L'image
         let productImg = document.createElement('img');
         document.querySelector('.item__img').appendChild(productImg);
         productImg.src = article.imageUrl;
@@ -28,7 +28,7 @@ function getProduct() {
         // Injecter la description
         document.querySelector('#description').innerHTML = article.description;
 
-        // Injecter les couleurs
+        // Les couleurs
         article.colors.forEach(color => {
             console.log(2, color);
             let productColors = document.createElement('option');
@@ -39,7 +39,7 @@ function getProduct() {
         addToCart(article);
     })
     .catch((err) => {
-        alert ("Problème réseau");  
+        alert (`Problème réseau : ${err}`);  
     });  
 }
 
@@ -77,8 +77,8 @@ function addToCart(articleToCart) {
             let itemStorage = localStorage.getItem('products'); 
 
             // S'il y a déja des articles dans le local storage
-            if (itemStorage !== null) { // S'il y a déja des articles dans le local storage, pour ne pas les écraser
-                articleLocalStorage = JSON.parse(itemStorage); // analyse la donnée JSON et construit la valeur JS
+            if(itemStorage !== null) { 
+                articleLocalStorage = JSON.parse(itemStorage); // Analyse la donnée JSON et construit la valeur JS
                 articleLocalStorage.push(productOptions);
                 localStorage.setItem('products', JSON.stringify(articleLocalStorage)); // Actualise le local storage
             }
@@ -90,7 +90,7 @@ function addToCart(articleToCart) {
             };
             // Redirection vers le panier
             let cartHref = `http://127.0.0.1:5500/front/html/cart.html`;
-            if (confirm('Votre produit a bien été ajouté. Souhaitez-vous accéder à votre panier?')){
+            if(confirm('Votre produit a bien été ajouté. Souhaitez-vous accéder à votre panier?')){
                 window.location = cartHref;
             } else {
                 window.location 

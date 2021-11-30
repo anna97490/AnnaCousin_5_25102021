@@ -6,11 +6,10 @@ function getItems() {
         .then((response) => response.json()) 
         .then((datas) => {
         console.log(1, datas);
-
             // Intégration des données de l'API dans le DOM
             datas.forEach(data => {
                 console.log(2, data);
-                // Le lien de la page "products" contenant l'id produit
+                // Le lien de la page "product" contenant l'id produit
                 let productLink = document.createElement('a');
                 document.querySelector('.items').appendChild(productLink);
                 productLink.href += `product.html?id=${data._id}`;
@@ -38,9 +37,8 @@ function getItems() {
                 productDescription.innerHTML = data.description;  
             
             });
-        
         }) 
-    .catch((error) => {
-        alert("Problème réseau");  
+    .catch((err) => {
+        alert(`Problème réseau : ${err}`);  
     });  
 }

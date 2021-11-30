@@ -23,7 +23,6 @@ function getInCart() {
             // Si l'article ajouté n'a pas le meme id et color alors il est ajouté au panier
             if(compareCurrProduct(productArrayCopy, product)) {
                 productArrayCopy.push(product);
-                console.log(3,compareCurrProduct(productArrayCopy, product))
             // Mais si c'est le cas c'est juste la qté qui change
             } else {
                 productArrayCopy.forEach(currProduct => {
@@ -64,7 +63,7 @@ function getInCart() {
             elementDivContent.appendChild(elementDivContentTitlePrice);
             elementDivContentTitlePrice.classList.add('cart__item__content__titlePrice');
 
-            // Le nom du produit
+            // Le nom 
             let elementTitle = document.createElement('h2');
             elementDivContentTitlePrice.appendChild(elementTitle);
             elementTitle.innerHTML = product.articleName;
@@ -98,11 +97,11 @@ function getInCart() {
             let elementQtyInput = document.createElement('input');
             elementDivSettingsQty.appendChild(elementQtyInput);
             elementQtyInput.classList.add('itemQuantity');
-            elementQtyInput.value = product.articleQuantity;
             elementQtyInput.setAttribute('type', 'number');
             elementQtyInput.setAttribute('name', 'itemQuantity');
             elementQtyInput.setAttribute('min', "1");
-            elementQtyInput.setAttribute('max', '100')
+            elementQtyInput.setAttribute('max', '100');
+            elementQtyInput.value = product.articleQuantity;
 
             // La div contenant l'option de suppression
             let elementDelete = document.createElement('div');
@@ -126,23 +125,25 @@ function compareCurrProduct(productArray, currProduct) {
     if(productArray.length > 0) {
         // Si au moins un élément existe 
         exist = !productArray.some(product => currProduct.articleId === product.articleId && currProduct.articleColor === product.articleColor);   
-    }console.log(4,exist)
+    }
     return exist;  
 }
 
 
 // Récupérer le total des articles et du prix 
 function totalItems() {
-     
-    // Ajouter la quantité totale
-    const elementTotalQty = document.querySelector('#totalQuantity');
-    const totalQty = productsInCart.reduce((accumulator, current) => accumulator + parseInt(current.articleQuantity, 10), 0);
-    elementTotalQty.innerHTML = totalQty;
-    
-    // Ajouter le prix total
-    const elementTotalPrice = document.querySelector('#totalPrice');
-    const totalPrice = productsInCart.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
-    elementTotalPrice.innerHTML = totalPrice;   
+    if (productsInCart !== null && productsInCart.length > 0) {
+        // Ajouter la quantité totale
+        const elementTotalQty = document.querySelector('#totalQuantity');
+        const totalQty = productsInCart.reduce((accumulator, current) => accumulator + parseInt(current.articleQuantity, 10), 0);
+        elementTotalQty.innerHTML = totalQty;
+        console.log(333,totalQty)
+        
+        // Ajouter le prix total
+        const elementTotalPrice = document.querySelector('#totalPrice');
+        const totalPrice = productsInCart.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
+        elementTotalPrice.innerHTML = totalPrice;   
+    }
 }
 
 // Changer la quantité d'articles via le panier
@@ -153,21 +154,19 @@ function qtyInput() {
         // Ecoute  du click de l'input afin de changer la qté
         input.addEventListener('click', (event) => {
            
-            // Récupérer l'id et la couleur séparés par un -
+            // Récupérer l'id et la couleur dans un nouveau tableau
             const dataItem = event.target.closest("article").dataset.id.split('-');
             
             // Récupérer la valeur de l'input, donc la qté contenue à l'intérieur
-            const newQty = event.target.value; // C'est une référence à l'objet qui a envoyé l'événement
+            const newQty = event.target.value; 
 
            // Actualiser productsInCart
             productsInCart.forEach(item => {
-                
                 // Si l'id et la couleur correspondent alors la qté est actualisée
                 if(item.articleId === dataItem[0] && item.articleColor === dataItem[1]) {
                     item.articleQuantity = newQty; 
                 }
-            });
-             
+            }); 
             // Actualiser le total
             totalItems();
         });
@@ -176,7 +175,7 @@ function qtyInput() {
 }
 
 //La suppression d'une ligne d'articles article
-function deleteItem(){
+function deleteItem() {
     // Récuperation de toutes les références vers tous les boutons supprimer de chaque article
     const deleteButtons = document.querySelectorAll('.deleteItem');
 
@@ -186,7 +185,7 @@ function deleteItem(){
         btn.addEventListener('click', (event) => {
             
             // Récupération de l'id et de la couleur via l'<article>
-            const articleToDelete = event.target.closest("article");//---l'id à supprimer est ici
+            const articleToDelete = event.target.closest("article");
             const dataItem = articleToDelete.dataset.id.split('-');
             console.log(5, dataItem);
             // Si cet élément existe
@@ -204,7 +203,7 @@ function deleteItem(){
                 localStorage.setItem('products', JSON.stringify(productsInCart));    
             }   
             //Ajout d'une boîte de dialogue "alert"
-            alert('Votre article a bien été supprimé')
+            alert('Votre article a bien été supprimé');
         });
     });  
 }
@@ -216,7 +215,7 @@ function orderForm() {
     // Ecouter la modification du Prénom
     form.firstName.addEventListener('change', () => {
           // Valider le format du prénom
-          let regExpFirstName = new RegExp('^[a-zA-Z-]+$');
+          let regExpFirstName = new RegExp('^[a-zA-Z-]{3,40}+$');
        
           // Récupération de la balise <p> '#firstNameErrorMsg'
           let firstName = form.firstName.nextElementSibling;
@@ -227,13 +226,12 @@ function orderForm() {
           } else {
               firstName.innerHTML = 'Votre Prénom ne doit contenir que des lettres';
           }
-    });console.log(66, form.firstName);
-    console.log(67, firstName.nextElementSibling);
+    });
 
     // Ecouter la modification du Nom
     form.lastName.addEventListener('change', () => {
         
-        let regExpLastName = new RegExp('^[a-zA-Z-]+$');
+        let regExpLastName = new RegExp('^[a-zA-Z-]{3,40}+$');
         
         // Récupération de la balise <p> '#lastNameErrorMsg'
         let lastName = form.lastName.nextElementSibling;
@@ -250,7 +248,7 @@ function orderForm() {
     form.address.addEventListener('change', () => {
 
     // Création de la reg exp pour la validation de l'adresse
-        let regExpAddress = new RegExp('^[A-Za-z0-9- ]*$');
+        let regExpAddress = new RegExp('^[A-Za-z0-9- ]{3,40}*$');
     
         // Récupération de la balise <p> '#addressErrorMsg'
         let address = form.address.nextElementSibling;
@@ -300,33 +298,30 @@ function orderForm() {
     });
 }
 
-// Envoi des informations du formulaire
-function postDataForm(){
+// Création de la commande
+function postDataForm() {
     const orderBtn = document.querySelector('#order');
     const formOrder = document.querySelector('.cart__order__form');
-    console.log(444,formOrder);
     
-    formOrder[0].addEventListener('submit', (event) => {
+    formOrder.addEventListener('submit', (event) => {
         // Annulation de l'envoi du formulaire par défaut
         event.preventDefault();
     });
     orderBtn.addEventListener('click', () => {
-        // Stocker les données saisies dans le local storage
+        // Récupérer les données saisies 
         const inputFirstName = document.querySelector('#firstName').value;
         const inputLastName = document.querySelector('#lastName').value;
         const inputAddress = document.querySelector('#address').value;
         const inputCity = document.querySelector('#city').value;
         const inputEmail = document.querySelector('#email').value;
-        console.log(888,inputFirstName);
         
         // Créer un tableau qui contient les produits sélectionnés 
         let productsOrdered = [];
         productsInCart.forEach(article => {
             productsOrdered.push(article.articleId);
         });
-        console.log(6, productsOrdered);
 
-        // Créer un objet qui contient les infos du client et les produits sélectionnés 
+        // Créer un objet qui contient les infos du client et les id
         const order = {
             contact : {
                 firstName : inputFirstName,
@@ -337,9 +332,8 @@ function postDataForm(){
             },
             products : productsOrdered,
         }
-        console.log(7, order);
 
-        // Envoi de la requete POST
+        // Requete POST
         const postRequest = {
             method: 'POST',
             body: JSON.stringify(order),
@@ -348,20 +342,19 @@ function postDataForm(){
             }
         };  
 
-        fetch('http://localhost:3000/api/products/order',postRequest)
+        fetch('http://localhost:3000/api/products/order', postRequest)
         .then((response) => response.json()) 
         .then((datas) => {
             localStorage.setItem('orderId', datas.orderId);
-            console.log(8, datas);
+            localStorage.removeItem('products');
+            // Redirection vers la page de confirmation
+            let confirmHref = `http://127.0.0.1:5500/front/html/confirmation.html`;
+            alert('Votre commande a bien été validée');
+            window.location = confirmHref; 
         })
         .catch((err) => {
-            alert ("Problème réseau");  
-        });
-        // Redirection vers la page de confirmation
-        let confirmHref = `http://127.0.0.1:5500/front/html/confirmation.html`;
-        alert('Votre commande a bien été validée');
-        window.location = confirmHref; 
-        //localStorage.clear(); 
+            alert (`Problème réseau : ${err}`);
+        });   
     });
 }
 

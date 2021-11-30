@@ -4,5 +4,4 @@ confirmationId();
 function confirmationId() {
     const getOrderId = document.querySelector('#orderId');
     getOrderId.innerHTML = localStorage.getItem('orderId');
-    console.log(1,getOrderId);
 }
