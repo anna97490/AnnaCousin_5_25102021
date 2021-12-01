@@ -7,12 +7,10 @@ getProduct();
 
 // Requete API
 function getProduct() {
-    // // Appel des données du produit à l'API
+    // Appel des données du produit à l'API
     fetch(`http://localhost:3000/api/products/${idProduct}`)
     .then(res => res.json()) 
     .then(article => {
-        console.log(1, article);
-
         // L'image
         let productImg = document.createElement('img');
         document.querySelector('.item__img').appendChild(productImg);
@@ -46,7 +44,7 @@ function getProduct() {
 // Ajout des articles dans le panier
 function addToCart(articleToCart) {
     const btnAddToCart = document.querySelector('#addToCart');
-    console.log(3, localStorage);
+
     // Ecouter l'évènement du clic
     btnAddToCart.addEventListener('click', () => {
         const colorSelection = document.querySelector('#colors');
@@ -69,7 +67,7 @@ function addToCart(articleToCart) {
                 articlePrice : articleToCart.price,
                 articleImg : articleToCart.imageUrl,
                 articleAltTxt : articleToCart.altTxt
-            }; console.log(4, productOptions);
+            }; 
 
             // Initialisation du local storage
             let articleLocalStorage = [];
@@ -86,14 +84,13 @@ function addToCart(articleToCart) {
                 articleLocalStorage.push(productOptions);
                 // Actualiser le local storage
                 localStorage.setItem('products', JSON.stringify(articleLocalStorage)); 
-                console.log(5, articleLocalStorage);
             };
             // Redirection vers le panier
             let cartHref = `http://127.0.0.1:5500/front/html/cart.html`;
             if(confirm('Votre produit a bien été ajouté. Souhaitez-vous accéder à votre panier?')){
                 window.location = cartHref;
             } else {
-                window.location 
+                window.location; 
             }
         };
     });

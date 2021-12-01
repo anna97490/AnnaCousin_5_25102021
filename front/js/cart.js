@@ -17,7 +17,6 @@ function getInCart() {
         cartItemId.innerText = 'Votre panier est vide';
     } else {
         let productArrayCopy = [];
-        console.log(2,productArrayCopy);
         // Vérifier si l'id et la couleur sont les memes ou pas 
         productsInCart.forEach(product => {
             // Si l'article ajouté n'a pas le meme id et color alors il est ajouté au panier
@@ -63,7 +62,7 @@ function getInCart() {
             elementDivContent.appendChild(elementDivContentTitlePrice);
             elementDivContentTitlePrice.classList.add('cart__item__content__titlePrice');
 
-            // Le nom 
+            // Le nom du produit
             let elementTitle = document.createElement('h2');
             elementDivContentTitlePrice.appendChild(elementTitle);
             elementTitle.innerHTML = product.articleName;
@@ -132,18 +131,17 @@ function compareCurrProduct(productArray, currProduct) {
 
 // Récupérer le total des articles et du prix 
 function totalItems() {
-    if (productsInCart !== null && productsInCart.length > 0) {
-        // Ajouter la quantité totale
-        const elementTotalQty = document.querySelector('#totalQuantity');
-        const totalQty = productsInCart.reduce((accumulator, current) => accumulator + parseInt(current.articleQuantity, 10), 0);
-        elementTotalQty.innerHTML = totalQty;
-        console.log(333,totalQty)
-        
-        // Ajouter le prix total
-        const elementTotalPrice = document.querySelector('#totalPrice');
-        const totalPrice = productsInCart.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
-        elementTotalPrice.innerHTML = totalPrice;   
-    }
+     if (productsInCart !== null && productsInCart.length > 0) {
+         // Ajouter la quantité totale
+         const elementTotalQty = document.querySelector('#totalQuantity');
+         const totalQty = productsInCart.reduce((accumulator, current) => accumulator + parseInt(current.articleQuantity, 10), 0);
+         elementTotalQty.innerHTML = totalQty;
+         
+         // Ajouter le prix total
+         const elementTotalPrice = document.querySelector('#totalPrice');
+         const totalPrice = productsInCart.reduce((accumulator, current) => accumulator + current.articlePrice * current.articleQuantity, 0);
+         elementTotalPrice.innerHTML = totalPrice;   
+     }
 }
 
 // Changer la quantité d'articles via le panier
@@ -158,7 +156,7 @@ function qtyInput() {
             const dataItem = event.target.closest("article").dataset.id.split('-');
             
             // Récupérer la valeur de l'input, donc la qté contenue à l'intérieur
-            const newQty = event.target.value; 
+            const newQty = event.target.value; // C'est une référence à l'objet qui a envoyé l'événement
 
            // Actualiser productsInCart
             productsInCart.forEach(item => {
@@ -166,7 +164,8 @@ function qtyInput() {
                 if(item.articleId === dataItem[0] && item.articleColor === dataItem[1]) {
                     item.articleQuantity = newQty; 
                 }
-            }); 
+            });
+             
             // Actualiser le total
             totalItems();
         });
@@ -175,7 +174,7 @@ function qtyInput() {
 }
 
 //La suppression d'une ligne d'articles article
-function deleteItem() {
+function deleteItem(){
     // Récuperation de toutes les références vers tous les boutons supprimer de chaque article
     const deleteButtons = document.querySelectorAll('.deleteItem');
 
@@ -185,15 +184,15 @@ function deleteItem() {
         btn.addEventListener('click', (event) => {
             
             // Récupération de l'id et de la couleur via l'<article>
-            const articleToDelete = event.target.closest("article");
+            const articleToDelete = event.target.closest("article");//---l'id à supprimer est ici
             const dataItem = articleToDelete.dataset.id.split('-');
-            console.log(5, dataItem);
+            //console.log(2, dataItem);
             // Si cet élément existe
             if(dataItem.length > 0) {
                 // Création d'un nouveau tableau trié qui permettra de faire l'actualisation du total du prix et de la qté
                 // Je garde uniquement les articles ayant un id différent de celui qui a été cliqué
                 productsInCart = productsInCart.filter(item => item.articleId !== dataItem[0] || item.articleColor !== dataItem[1]);
-                console.log(6,productsInCart);
+                //console.log(3,productsInCart);
                 
                 // Suppression de l'ancien article dans le DOM
                 articleToDelete.remove();
@@ -203,7 +202,7 @@ function deleteItem() {
                 localStorage.setItem('products', JSON.stringify(productsInCart));    
             }   
             //Ajout d'une boîte de dialogue "alert"
-            alert('Votre article a bien été supprimé');
+            alert('Votre article a bien été supprimé')
         });
     });  
 }
@@ -214,24 +213,24 @@ function orderForm() {
     
     // Ecouter la modification du Prénom
     form.firstName.addEventListener('change', () => {
-          // Valider le format du prénom
-          let regExpFirstName = new RegExp('^[a-zA-Z-]{3,40}+$');
-       
-          // Récupération de la balise <p> '#firstNameErrorMsg'
-          let firstName = form.firstName.nextElementSibling;
-  
-           // Test de ce que l'utilisateur a saisi
-          if(regExpFirstName.test(form.firstName.value)) {
-              firstName.innerHTML = '';
-          } else {
-              firstName.innerHTML = 'Votre Prénom ne doit contenir que des lettres';
-          }
+        // Valider le format du prénom
+        let regExpFirstName = new RegExp('^[a-zA-Z-àâäéèêëïîôöùûüç]+$');
+    
+        // Récupération de la balise <p> '#firstNameErrorMsg'
+        let firstName = form.firstName.nextElementSibling;
+
+        // Test de ce que l'utilisateur a saisi
+        if(regExpFirstName.test(form.firstName.value)) {
+            firstName.innerHTML = '';
+        } else {
+            firstName.innerHTML = 'Votre Prénom ne doit contenir que des lettres';
+        }
     });
 
     // Ecouter la modification du Nom
     form.lastName.addEventListener('change', () => {
         
-        let regExpLastName = new RegExp('^[a-zA-Z-]{3,40}+$');
+        let regExpLastName = new RegExp('^[a-zA-Z-àâäéèêëïîôöùûüç]+$');
         
         // Récupération de la balise <p> '#lastNameErrorMsg'
         let lastName = form.lastName.nextElementSibling;
@@ -248,7 +247,7 @@ function orderForm() {
     form.address.addEventListener('change', () => {
 
     // Création de la reg exp pour la validation de l'adresse
-        let regExpAddress = new RegExp('^[A-Za-z0-9- ]{3,40}*$');
+        let regExpAddress = new RegExp('^[A-Za-z0-9-àâäéèêëïîôöùûüç]*$');
     
         // Récupération de la balise <p> '#addressErrorMsg'
         let address = form.address.nextElementSibling;
@@ -265,7 +264,7 @@ function orderForm() {
     form.city.addEventListener('change', () => {
     
     // Création de la reg exp pour la validation de la ville
-        let regExpCity = new RegExp('^[a-zA-Z-]+$');
+        let regExpCity = new RegExp('^[a-zA-Z-àâäéèêëïîôöùûüç]+$');
 
         // Récupération de la balise <p> '#cityErrorMsg'
         let city = form.city.nextElementSibling;
@@ -298,8 +297,8 @@ function orderForm() {
     });
 }
 
-// Création de la commande
-function postDataForm() {
+// Envoi des informations du formulaire
+function postDataForm(){
     const orderBtn = document.querySelector('#order');
     const formOrder = document.querySelector('.cart__order__form');
     
@@ -308,7 +307,7 @@ function postDataForm() {
         event.preventDefault();
     });
     orderBtn.addEventListener('click', () => {
-        // Récupérer les données saisies 
+        // Stocker les données saisies dans le local storage
         const inputFirstName = document.querySelector('#firstName').value;
         const inputLastName = document.querySelector('#lastName').value;
         const inputAddress = document.querySelector('#address').value;
@@ -321,7 +320,7 @@ function postDataForm() {
             productsOrdered.push(article.articleId);
         });
 
-        // Créer un objet qui contient les infos du client et les id
+        // Créer un objet qui contient les infos du client et les produits sélectionnés 
         const order = {
             contact : {
                 firstName : inputFirstName,
@@ -332,15 +331,17 @@ function postDataForm() {
             },
             products : productsOrdered,
         }
+        //console.log(4,order);
 
-        // Requete POST
+        // Envoi de la requete POST
         const postRequest = {
             method: 'POST',
             body: JSON.stringify(order),
             headers: { 
+                'Accept': 'application/json', 
                 'Content-Type': 'application/json'
             }
-        };  
+        };  //console.log(5,postRequest);
 
         fetch('http://localhost:3000/api/products/order', postRequest)
         .then((response) => response.json()) 

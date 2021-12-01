@@ -5,7 +5,6 @@ function getItems() {
     fetch('http://localhost:3000/api/products')
         .then((response) => response.json()) 
         .then((datas) => {
-        console.log(1, datas);
             // Intégration des données de l'API dans le DOM
             datas.forEach(data => {
                 console.log(2, data);
