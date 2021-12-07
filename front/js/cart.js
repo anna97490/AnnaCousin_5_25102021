@@ -1,5 +1,5 @@
 // Tranformer la chaine de caractère en JSON
-let productsInCart = JSON.parse(localStorage.getItem('products'));
+/*let productsInCart = JSON.parse(localStorage.getItem('products'));
 console.log(1, productsInCart);
 
 
@@ -247,7 +247,7 @@ function orderForm() {
     form.address.addEventListener('change', () => {
 
     // Création de la reg exp pour la validation de l'adresse
-        let regExpAddress = new RegExp('^[A-Za-z0-9-àâäéèêëïîôöùûüç]*$');
+        let regExpAddress = new RegExp('^[A-Za-z0-9-àâäéèêëïîôöùûüç ]*$');
     
         // Récupération de la balise <p> '#addressErrorMsg'
         let address = form.address.nextElementSibling;
@@ -357,7 +357,7 @@ function postDataForm(){
             alert (`Problème réseau : ${err}`);
         });   
     });
-}
+}*/
 
 
 
