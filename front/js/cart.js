@@ -1,5 +1,5 @@
 // Tranformer la chaine de caractère en JSON
-/*let productsInCart = JSON.parse(localStorage.getItem('products'));
+let productsInCart = JSON.parse(localStorage.getItem('products'));
 console.log(1, productsInCart);
 
 
@@ -36,41 +36,43 @@ function getInCart() {
         // Générer les éléments du panier dans DOM
         productsInCart.forEach(product => {
             // L'<article>
-            let elementArticle = document.createElement('article');
-            document.querySelector('#cart__items').appendChild(elementArticle);
-            elementArticle.classList.add = 'cart__item';
-            elementArticle.setAttribute('data-id', `${product.articleId}-${product.articleColor}`);
+            let article = document.createElement('article');
+            document.querySelector('#cart__items').appendChild(article);
+            article.classList.add = 'cart__item';
+            article.setAttribute('data-id', `${product.articleId}-${product.articleColor}`);
 
             // La div contenant l'image
-            let elementDivImg = document.createElement('div');
-            elementArticle.appendChild(elementDivImg);
-            elementDivImg.classList.add('cart__item__img');
+            const articleToSelect = document.querySelector('.cart__item')
+            let divOne = document.createElement('div');
+            articleToSelect.appendChild(divOne);
+            divOne.classList.add('cart__item__img');
 
             // L'image 
-            let elementImg = document.createElement('img');
-            elementDivImg.appendChild(elementImg);
-            elementImg.src = product.articleImg;
-            elementImg.alt = product.articleAltTxt;
+            const divOneImg = document.querySelector
+            let img = document.createElement('img');
+            divOne.appendChild(img);
+            img.src = product.articleImg;
+            img.alt = product.articleAltTxt;
 
-            // La div 'cart__item__content'
-            let elementDivContent = document.createElement('div');
-            elementArticle.appendChild(elementDivContent);
-            elementDivContent.classList.add('cart__item__content');
+            /*// La div 'cart__item__content'
+            let divTwo = document.createElement('div');
+            article.appendChild(divTwo);
+            divTwo.classList.add('cart__item__content');
 
             // La div contenant le prix et le nom du produit
-            let elementDivContentTitlePrice = document.createElement('div');
-            elementDivContent.appendChild(elementDivContentTitlePrice);
-            elementDivContentTitlePrice.classList.add('cart__item__content__titlePrice');
+            let divThree = document.createElement('div');
+            divTwo.appendChild(divThree);
+            divThree.classList.add('cart__item__content__titlePrice');
 
             // Le nom du produit
-            let elementTitle = document.createElement('h2');
-            elementDivContentTitlePrice.appendChild(elementTitle);
-            elementTitle.innerHTML = product.articleName;
+            let title = document.createElement('h2');
+            divThree.appendChild(title);
+            title.innerHTML = product.articleName;
 
             // Le prix
-            let elementPrice = document.createElement('p');
-            elementDivContentTitlePrice.appendChild(elementPrice);
-            elementPrice.innerHTML = product.articlePrice + " €";
+            let price = document.createElement('p');
+            divThree.appendChild(price);
+            price.innerHTML = product.articlePrice + " €";
 
             // La div 'cart__item__content__settings'
             let elementDivSettings = document.createElement('div');
@@ -111,7 +113,7 @@ function getInCart() {
             let elementDeleteItm = document.createElement('p');
             elementDelete.appendChild(elementDeleteItm);
             elementDeleteItm.className = 'deleteItem';
-            elementDeleteItm.innerHTML = 'Supprimer';
+            elementDeleteItm.innerHTML = 'Supprimer';*/
         });
     }
     deleteItem();
@@ -357,7 +359,7 @@ function postDataForm(){
             alert (`Problème réseau : ${err}`);
         });   
     });
-}*/
+}
 
 
 

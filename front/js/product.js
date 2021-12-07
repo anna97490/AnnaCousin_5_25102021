@@ -11,36 +11,7 @@ function getProduct() {
     fetch(`http://localhost:3000/api/products/${idProduct}`)
     .then(res => res.json()) 
     .then(article => {
-        console.log(44, article);
-        const itemImg = document.querySelector('.item__img');
-        console.log(1, itemImg);
-
-        let img = itemImg.firstElementChild;
-        console.log(2, img);
-        img.src = article.imageUrl;
-        img.alt = article.altTxt;
-
-        // Injecter le titre
-        document.querySelector('#title').innerHTML = article.name;
-
-        // Injecter le prix
-        document.querySelector('#price').innerHTML = article.price;
-
-        // Injecter la description
-        document.querySelector('#description').innerHTML = article.description;
-
-        article.colors.forEach(color => {
-            const colors = document.querySelector('#colors');
-            console.log(3, colors);
-            let colorsTxt = colors.firstElementChild;
-            console.log(4, colorsTxt);
-            let colorsOptions = colorsTxt.nextElementSibling;
-            console.log(5, colorsOptions);
-            colorsOptions.value = color;
-            colorsOptions.innerHTML = color;
-           
-        })
-        /*// L'image
+        // L'image
         let productImg = document.createElement('img');
         document.querySelector('.item__img').appendChild(productImg);
         productImg.src = article.imageUrl;
@@ -62,7 +33,7 @@ function getProduct() {
             document.querySelector('#colors').appendChild(productColors);
             productColors.value = color;
             productColors.innerHTML = color;
-        });*/
+        });
         addToCart(article);
     })
     .catch((err) => {
