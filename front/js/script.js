@@ -1,5 +1,10 @@
 getItems();
 
+let items = document.querySelector('#items');
+let firstElement = items.childNodes[1];
+console.log(1, firstElement);
+firstElement.remove();
+
 // Requete API
 function getItems() {
     fetch('http://localhost:3000/api/products')

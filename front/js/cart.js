@@ -7,11 +7,15 @@ qtyInput();
 orderForm();
 postDataForm();
 
+let cartItemId = document.querySelector('#cart__items');
+let firstElement = cartItemId.childNodes[1];
+console.log(1, firstElement);
+firstElement.remove();
+
 let isFormValid = false;
 
 // Création des items du panier
 function getInCart() {
-    const cartItemId = document.querySelector('#cart__items');
     // Si le panier est vide
     if (productsInCart == null || productsInCart == 0) {
         cartItemId.innerText = 'Votre panier est vide';
@@ -32,87 +36,91 @@ function getInCart() {
             }
         });
         productsInCart = productArrayCopy;
-            
+
         // Générer les éléments du panier dans DOM
-        productsInCart.forEach(product => {
-            // L'<article>
-            let article = document.createElement('article');
-            document.querySelector('#cart__items').appendChild(article);
-            article.classList.add('cart__item');
-            article.setAttribute('data-id', `${product.articleId}-${product.articleColor}`);
+        
+        productsInCart.forEach((product, index) => {
 
-            // La <div> contenant l'image
-            let divImg = document.createElement('div');
-            article.appendChild(divImg);
-            divImg.classList.add('cart__item__img');
+                // L'<article>
+                let article = document.createElement('article');
+                document.querySelector('#cart__items').appendChild(article);
+                article.classList.add('cart__item');
+                article.setAttribute('data-id', `${product.articleId}-${product.articleColor}`);
 
-            // L'image 
-            let img = document.createElement('img');
-            divImg.appendChild(img);
-            img.src = product.articleImg;
-            img.alt = product.articleAltTxt;
+                // La <div> contenant l'image
+                let divImg = document.createElement('div');
+                article.appendChild(divImg);
+                divImg.classList.add('cart__item__img');
 
-            // La div 'cart__item__content'
-            let divTwo = document.createElement('div');
-            article.appendChild(divTwo);
-            divTwo.classList.add('cart__item__content');
+                // L'image 
+                let img = document.createElement('img');
+                divImg.appendChild(img);
+                img.src = product.articleImg;
+                img.alt = product.articleAltTxt;
 
-            // La div contenant le prix et le nom du produit
-            let divThree = document.createElement('div');
-            divTwo.appendChild(divThree);
-            divThree.classList.add('cart__item__content__titlePrice');
+                // La div 'cart__item__content'
+                let divTwo = document.createElement('div');
+                article.appendChild(divTwo);
+                divTwo.classList.add('cart__item__content');
 
-            // Le nom du produit
-            let title = document.createElement('h2');
-            divThree.appendChild(title);
-            title.innerHTML = product.articleName;
+                // La div contenant le prix et le nom du produit
+                let divThree = document.createElement('div');
+                divTwo.appendChild(divThree);
+                divThree.classList.add('cart__item__content__titlePrice');
 
-            // Le prix
-            let price = document.createElement('p');
-            divThree.appendChild(price);
-            price.innerHTML = product.articlePrice + " €";
+                // Le nom du produit
+                let title = document.createElement('h2');
+                divThree.appendChild(title);
+                title.innerHTML = product.articleName;
 
-            // La div 'cart__item__content__settings'
-            let divFour = document.createElement('div');
-            divTwo.appendChild(divFour);
-            divFour.classList.add('cart__item__content__settings');
+                // Le prix
+                let price = document.createElement('p');
+                divThree.appendChild(price);
+                price.innerHTML = product.articlePrice + " €";
 
-            // La div contenant le texte de qté et la couleur
-            let divFive = document.createElement('div');
-            divFour.appendChild(divFive);
-            divFive.classList.add('cart__item__content__settings__quantity');
+                // La div 'cart__item__content__settings'
+                let divFour = document.createElement('div');
+                divTwo.appendChild(divFour);
+                divFour.classList.add('cart__item__content__settings');
 
-            // La couleur
-            let color = document.createElement('p');
-            divFive.appendChild(color);
-            color.innerHTML = product.articleColor;
+                // La div contenant le texte de qté et la couleur
+                let divFive = document.createElement('div');
+                divFour.appendChild(divFive);
+                divFive.classList.add('cart__item__content__settings__quantity');
 
-            // Le texte de qté
-            let qty = document.createElement('p');
-            divFive.appendChild(qty);
-            qty.innerHTML = 'Qté : ';
+                // La couleur
+                let color = document.createElement('p');
+                divFive.appendChild(color);
+                color.innerHTML = product.articleColor;
 
-            // Insérer la quantité avec l'élément input
-            let qtyInput = document.createElement('input');
-            divFive.appendChild(qtyInput);
-            qtyInput.classList.add('itemQuantity');
-            qtyInput.setAttribute('type', 'number');
-            qtyInput.setAttribute('name', 'itemQuantity');
-            qtyInput.setAttribute('min', "1");
-            qtyInput.setAttribute('max', '100');
-            qtyInput.value = product.articleQuantity;
+                // Le texte de qté
+                let qty = document.createElement('p');
+                divFive.appendChild(qty);
+                qty.innerHTML = 'Qté : ';
 
-            // La div contenant l'option de suppression
-            let divSix = document.createElement('div');
-            divFour.appendChild(divSix);
-            divSix.classList.add('cart__item__content__settings__delete'); 
+                // Insérer la quantité avec l'élément input
+                let qtyInput = document.createElement('input');
+                divFive.appendChild(qtyInput);
+                qtyInput.classList.add('itemQuantity');
+                qtyInput.setAttribute('type', 'number');
+                qtyInput.setAttribute('name', 'itemQuantity');
+                qtyInput.setAttribute('min', "1");
+                qtyInput.setAttribute('max', '100');
+                qtyInput.value = product.articleQuantity;
 
-            // L'élément de suppression
-            let deleteBtn = document.createElement('p');
-            divFour.appendChild(deleteBtn);
-            deleteBtn.classList.add('deleteItem');
-            deleteBtn.innerHTML = 'Supprimer';
+                // La div contenant l'option de suppression
+                let divSix = document.createElement('div');
+                divFour.appendChild(divSix);
+                divSix.classList.add('cart__item__content__settings__delete'); 
+
+                // L'élément de suppression
+                let deleteBtn = document.createElement('p');
+                divFour.appendChild(deleteBtn);
+                deleteBtn.classList.add('deleteItem');
+                deleteBtn.innerHTML = 'Supprimer';
+            
         });
+
     }
     deleteItem();
 }
