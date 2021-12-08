@@ -1,9 +1,8 @@
-getItems();
-
 let items = document.querySelector('#items');
 let firstElement = items.childNodes[1];
-console.log(1, firstElement);
 firstElement.remove();
+
+getItems();
 
 // Requete API
 function getItems() {

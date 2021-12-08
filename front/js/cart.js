@@ -1,18 +1,18 @@
 // Tranformer la chaine de caractère en JSON
 let productsInCart = JSON.parse(localStorage.getItem('products'));
 
+let cartItemId = document.querySelector('#cart__items');
+let firstElement = cartItemId.childNodes[1];
+firstElement.remove();
+
+// Check pour le formulaire
+let isFormValid = false;
+
 getInCart();
 totalItems();
 qtyInput();
 orderForm();
 postDataForm();
-
-let cartItemId = document.querySelector('#cart__items');
-let firstElement = cartItemId.childNodes[1];
-console.log(1, firstElement);
-firstElement.remove();
-
-let isFormValid = false;
 
 // Création des items du panier
 function getInCart() {
@@ -38,89 +38,85 @@ function getInCart() {
         productsInCart = productArrayCopy;
 
         // Générer les éléments du panier dans DOM
-        
-        productsInCart.forEach((product, index) => {
+        productsInCart.forEach((product) => {
+            // L'<article>
+            let article = document.createElement('article');
+            document.querySelector('#cart__items').appendChild(article);
+            article.classList.add('cart__item');
+            article.setAttribute('data-id', `${product.articleId}-${product.articleColor}`);
 
-                // L'<article>
-                let article = document.createElement('article');
-                document.querySelector('#cart__items').appendChild(article);
-                article.classList.add('cart__item');
-                article.setAttribute('data-id', `${product.articleId}-${product.articleColor}`);
+            // La <div> contenant l'image
+            let divImg = document.createElement('div');
+            article.appendChild(divImg);
+            divImg.classList.add('cart__item__img');
 
-                // La <div> contenant l'image
-                let divImg = document.createElement('div');
-                article.appendChild(divImg);
-                divImg.classList.add('cart__item__img');
+            // L'image 
+            let img = document.createElement('img');
+            divImg.appendChild(img);
+            img.src = product.articleImg;
+            img.alt = product.articleAltTxt;
 
-                // L'image 
-                let img = document.createElement('img');
-                divImg.appendChild(img);
-                img.src = product.articleImg;
-                img.alt = product.articleAltTxt;
+            // La div 'cart__item__content'
+            let divTwo = document.createElement('div');
+            article.appendChild(divTwo);
+            divTwo.classList.add('cart__item__content');
 
-                // La div 'cart__item__content'
-                let divTwo = document.createElement('div');
-                article.appendChild(divTwo);
-                divTwo.classList.add('cart__item__content');
+            // La div contenant le prix et le nom du produit
+            let divThree = document.createElement('div');
+            divTwo.appendChild(divThree);
+            divThree.classList.add('cart__item__content__titlePrice');
 
-                // La div contenant le prix et le nom du produit
-                let divThree = document.createElement('div');
-                divTwo.appendChild(divThree);
-                divThree.classList.add('cart__item__content__titlePrice');
+            // Le nom du produit
+            let title = document.createElement('h2');
+            divThree.appendChild(title);
+            title.innerHTML = product.articleName;
 
-                // Le nom du produit
-                let title = document.createElement('h2');
-                divThree.appendChild(title);
-                title.innerHTML = product.articleName;
+            // Le prix
+            let price = document.createElement('p');
+            divThree.appendChild(price);
+            price.innerHTML = product.articlePrice + " €";
 
-                // Le prix
-                let price = document.createElement('p');
-                divThree.appendChild(price);
-                price.innerHTML = product.articlePrice + " €";
+            // La div 'cart__item__content__settings'
+            let divFour = document.createElement('div');
+            divTwo.appendChild(divFour);
+            divFour.classList.add('cart__item__content__settings');
 
-                // La div 'cart__item__content__settings'
-                let divFour = document.createElement('div');
-                divTwo.appendChild(divFour);
-                divFour.classList.add('cart__item__content__settings');
+            // La div contenant le texte de qté et la couleur
+            let divFive = document.createElement('div');
+            divFour.appendChild(divFive);
+            divFive.classList.add('cart__item__content__settings__quantity');
 
-                // La div contenant le texte de qté et la couleur
-                let divFive = document.createElement('div');
-                divFour.appendChild(divFive);
-                divFive.classList.add('cart__item__content__settings__quantity');
+            // La couleur
+            let color = document.createElement('p');
+            divFive.appendChild(color);
+            color.innerHTML = product.articleColor;
 
-                // La couleur
-                let color = document.createElement('p');
-                divFive.appendChild(color);
-                color.innerHTML = product.articleColor;
+            // Le texte de qté
+            let qty = document.createElement('p');
+            divFive.appendChild(qty);
+            qty.innerHTML = 'Qté : ';
 
-                // Le texte de qté
-                let qty = document.createElement('p');
-                divFive.appendChild(qty);
-                qty.innerHTML = 'Qté : ';
+            // Insérer la quantité avec l'élément input
+            let qtyInput = document.createElement('input');
+            divFive.appendChild(qtyInput);
+            qtyInput.classList.add('itemQuantity');
+            qtyInput.setAttribute('type', 'number');
+            qtyInput.setAttribute('name', 'itemQuantity');
+            qtyInput.setAttribute('min', "1");
+            qtyInput.setAttribute('max', '100');
+            qtyInput.value = product.articleQuantity;
 
-                // Insérer la quantité avec l'élément input
-                let qtyInput = document.createElement('input');
-                divFive.appendChild(qtyInput);
-                qtyInput.classList.add('itemQuantity');
-                qtyInput.setAttribute('type', 'number');
-                qtyInput.setAttribute('name', 'itemQuantity');
-                qtyInput.setAttribute('min', "1");
-                qtyInput.setAttribute('max', '100');
-                qtyInput.value = product.articleQuantity;
+            // La div contenant l'option de suppression
+            let divSix = document.createElement('div');
+            divFour.appendChild(divSix);
+            divSix.classList.add('cart__item__content__settings__delete'); 
 
-                // La div contenant l'option de suppression
-                let divSix = document.createElement('div');
-                divFour.appendChild(divSix);
-                divSix.classList.add('cart__item__content__settings__delete'); 
-
-                // L'élément de suppression
-                let deleteBtn = document.createElement('p');
-                divFour.appendChild(deleteBtn);
-                deleteBtn.classList.add('deleteItem');
-                deleteBtn.innerHTML = 'Supprimer';
-            
+            // L'élément de suppression
+            let deleteBtn = document.createElement('p');
+            divSix.appendChild(deleteBtn);
+            deleteBtn.classList.add('deleteItem');
+            deleteBtn.innerHTML = 'Supprimer'; 
         });
-
     }
     deleteItem();
 }
@@ -155,7 +151,6 @@ function totalItems() {
 // Changer la quantité d'articles via le panier
 function qtyInput() {
     const listInputItemQty = document.querySelectorAll('.itemQuantity');
-
     listInputItemQty.forEach(input => { // Récupérer les données de l'input 
         // Ecoute  du click de l'input afin de changer la qté
         input.addEventListener('click', (event) => {
@@ -173,7 +168,6 @@ function qtyInput() {
                     item.articleQuantity = newQty; 
                 }
             });
-             
             // Actualiser le total
             totalItems();
         });
@@ -185,7 +179,6 @@ function qtyInput() {
 function deleteItem(){
     // Récuperation de toutes les références vers tous les boutons supprimer de chaque article
     const deleteButtons = document.querySelectorAll('.deleteItem');
-
     // Récupération des données de l'élément <p> 'supprimer'
     deleteButtons.forEach(btn => {
         // Pour chaque bouton supprimé, ajout d'un eventListener
@@ -194,13 +187,12 @@ function deleteItem(){
             // Récupération de l'id et de la couleur via l'<article>
             const articleToDelete = event.target.closest("article");//---l'id à supprimer est ici
             const dataItem = articleToDelete.dataset.id.split('-');
-            //console.log(2, dataItem);
+            
             // Si cet élément existe
             if(dataItem.length > 0) {
                 // Création d'un nouveau tableau trié qui permettra de faire l'actualisation du total du prix et de la qté
                 // Je garde uniquement les articles ayant un id différent de celui qui a été cliqué
                 productsInCart = productsInCart.filter(item => item.articleId !== dataItem[0] || item.articleColor !== dataItem[1]);
-                //console.log(3,productsInCart);
                 
                 // Suppression de l'ancien article dans le DOM
                 articleToDelete.remove();
@@ -218,7 +210,6 @@ function deleteItem(){
 // Validation du formulaire
 function orderForm() {
     const form = document.querySelector('.cart__order__form');
-    
         // Ecouter la modification du Prénom
         form.firstName.addEventListener('change', () => {
         // Valider le format du prénom
@@ -239,7 +230,6 @@ function orderForm() {
 
     // Ecouter la modification du Nom
     form.lastName.addEventListener('change', () => {
-        
         let regExpLastName = new RegExp('^[a-zA-Z-àâäéèêëïîôöùûüç]+$');
         
         // Récupération de la balise <p> '#lastNameErrorMsg'
@@ -257,7 +247,6 @@ function orderForm() {
 
     // Ecouter la modification de l'Adresse
     form.address.addEventListener('change', () => {
-
     // Création de la reg exp pour la validation de l'adresse
         let regExpAddress = new RegExp('^[A-Za-z0-9-àâäéèêëïîôöùûüç ]*$');
     
@@ -276,7 +265,6 @@ function orderForm() {
 
     // Ecouter la modification de la ville
     form.city.addEventListener('change', () => {
-    
     // Création de la reg exp pour la validation de la ville
         let regExpCity = new RegExp('^[a-zA-Z-àâäéèêëïîôöùûüç]+$');
 
@@ -331,13 +319,12 @@ function postDataForm(){
         const inputEmail = document.querySelector('#email').value;
         
         if((inputFirstName && isFormValid) && (inputLastName && isFormValid) && (inputAddress && isFormValid) && (inputCity && isFormValid)  && (inputEmail && isFormValid)) {
-        // Créer un tableau qui contient les produits sélectionnés 
         let productsOrdered = [];
         productsInCart.forEach(article => {
             productsOrdered.push(article.articleId);
         });
 
-        // Créer un objet qui contient les infos du client et les produits sélectionnés 
+        // Créer un objet qui contient les infos du client et les produits id
         const order = {
             contact : {
                 firstName : inputFirstName,
@@ -348,7 +335,6 @@ function postDataForm(){
             },
             products : productsOrdered,
         }
-        //console.log(4,order);
 
         // Envoi de la requete POST
         const postRequest = {
@@ -364,7 +350,8 @@ function postDataForm(){
         .then((response) => response.json()) 
         .then((datas) => {
             localStorage.setItem('orderId', datas.orderId);
-            //localStorage.removeItem('products');
+            localStorage.removeItem('products');
+
             // Redirection vers la page de confirmation
             let confirmHref = `http://127.0.0.1:5500/front/html/confirmation.html`;
             alert('Votre commande a bien été validée');
@@ -374,7 +361,6 @@ function postDataForm(){
             alert (`Problème réseau : ${err}`);
         }); 
     } 
-    alert('Veuillez compléter tous les champs du formulaire');
     });
 }
 

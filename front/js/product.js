@@ -3,11 +3,10 @@ let currentUrl = window.location.href;
 let idForUrl = new URL(currentUrl).searchParams.get('id');
 let idProduct = idForUrl;
 
-
 const colorSelection = document.querySelector('#colors');
 // Récupération du string dans le choix des couleurs pour ne pas qu'il soit ajouté au panier au moment du clic
 let colorValue1 = colorSelection.firstElementChild.value;
-console.log(12,colorValue1);
+
 const qtySelection = document.querySelector('#quantity');
 
 getProduct();
@@ -35,7 +34,6 @@ function getProduct() {
 
         // Les couleurs
         article.colors.forEach(color => {
-            console.log(2, color);
             let productColors = document.createElement('option');
             document.querySelector('#colors').appendChild(productColors);
             productColors.value = color;
@@ -58,7 +56,7 @@ function addToCart(articleToCart) {
         // Récupérer la couleur et la qté pour les sélectionner et les envoyer avec l'objet
         let colorChoice = colorSelection.value;
         let quantityChoice = qtySelection.value;
-        console.log(colorChoice);
+
         // Si la quantité d'articles est comprise entre 0 et 100
         if (qtySelection.value > 0 && qtySelection.value < 100 && colorChoice !== colorValue1) {
         
