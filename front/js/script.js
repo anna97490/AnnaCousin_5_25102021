@@ -7,13 +7,6 @@ function getItems() {
         .then((datas) => {
             // Intégration des données de l'API dans le DOM
             datas.forEach(data => {
-                console.log(2, data);
-                /*let items = document.getElementById('items');
-                console.log(6, items);
-                let first = items.children[0];
-                console.log(7, first);
-                //items.removeChild(first);*/
-                
                 // Le lien de la page "product" contenant l'id produit
                 let productLink = document.createElement('a');
                 document.querySelector('.items').appendChild(productLink);
@@ -40,7 +33,6 @@ function getItems() {
                 productArticle.appendChild(productDescription);
                 productDescription.classList.add('productDescription');
                 productDescription.innerHTML = data.description;  
-            
             });
         }) 
     .catch((err) => {
